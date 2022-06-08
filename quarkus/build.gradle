@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+def casual_standalone_version = 0.1
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation 'io.quarkus:quarkus-resteasy-reactive'
+    implementation 'io.quarkus:quarkus-narayana-jta'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-netty:2.9.1.Final'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation project(':standalone')
+    implementation files(
+        "../../casual-standalone/ext/casual-api/build/libs/casual-api-${casual_standalone_version}.jar",
+	"../../casual-standalone/ext/casual-network-api/build/libs/casual-network-api-${casual_standalone_version}.jar",
+	"../../casual-standalone/ext/casual-network/build/libs/casual-network-${casual_standalone_version}.jar",
+	"../../casual-standalone/ext/casual-network-protocol/build/libs/casual-network-protocol-${casual_standalone_version}.jar",
+	"../../casual-standalone/standalone/build/libs/standalone-${casual_standalone_version}.jar"
+    )
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+}

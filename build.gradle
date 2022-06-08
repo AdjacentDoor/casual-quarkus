@@ -1,0 +1,22 @@
+subprojects{
+   group 'se.laz.casual'
+   version '1.0.0-SNAPSHOT'
+   repositories {
+      mavenCentral()
+      mavenLocal()
+   }
+   tasks.withType(JavaCompile) {
+      sourceCompatibility = JavaVersion.VERSION_11
+      targetCompatibility = JavaVersion.VERSION_11
+      compileJava {
+         options.encoding = 'UTF-8'
+         //options.compilerArgs << '-parameters' << "-Xlint:all" << "-Werror"
+	    options.compilerArgs << '-parameters' << "-Xlint:all" 
+      }
+   }
+   tasks.withType(Test){
+      compileTestJava {
+         options.encoding = 'UTF-8'
+      }
+   }
+}

@@ -1,0 +1,16 @@
+plugins{
+    id 'java'
+}
+
+def casual_standalone_version = 0.1
+
+dependencies{
+    compileOnly 'javax.transaction:transaction-api:1.1'
+    implementation 'commons-io:commons-io:2.11.0'
+    compileOnly files(
+        "../../casual-standalone/ext/casual-api/build/libs/casual-api-${casual_standalone_version}.jar",
+	"../../casual-standalone/ext/casual-network-api/build/libs/casual-network-api-${casual_standalone_version}.jar",
+	"../../casual-standalone/ext/casual-network/build/libs/casual-network-${casual_standalone_version}.jar",
+	"../../casual-standalone/ext/casual-network-protocol/build/libs/casual-network-protocol-${casual_standalone_version}.jar"	
+    )
+}
