@@ -16,7 +16,6 @@ subprojects{
       compileJava {
          options.encoding = 'UTF-8'
          options.compilerArgs << '-parameters' << "-Xlint:all" << "-Werror"
-	      //options.compilerArgs << '-parameters' << "-Xlint:all"
       }
    }
    tasks.withType(Test){
