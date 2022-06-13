@@ -13,6 +13,13 @@ plugins {
 
 defaultTasks 'build'
 
+test{
+    useJUnitPlatform()
+    testLogging {
+	events "passed", "skipped", "failed"
+    }
+}
+
 dependencies {
   compileOnly project(':ext:casual-api')
   implementation project(':ext:casual-network-api')

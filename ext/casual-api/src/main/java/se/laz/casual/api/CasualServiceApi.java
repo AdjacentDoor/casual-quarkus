@@ -36,10 +36,10 @@ public interface CasualServiceApi
     ServiceReturn<CasualBuffer> tpcall(String serviceName, CasualBuffer data, Flag<AtmiFlags> flags);
 
     /**
-     * Async call
-     * Wraps up a call to tpcall in a worker thread
-     *
      * Be aware to handle any exception when using get/join
+     *
+     * If getServiceReturnState() != ServiceReturnState.TPSUCCESS
+     * then you should setRollBackOnly - this is handled for you if you use tpcall
      *
      * @param serviceName the name of the service to call.
      * @param data the data to send to the given service.

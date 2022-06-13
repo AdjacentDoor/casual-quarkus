@@ -38,15 +38,15 @@ public class CallerImpl implements Caller
     private final QueueCaller queueCaller;
     private final Set<String> serviceCache = new HashSet<>();
     private final Set<String> queueCache = new HashSet<>();
-    private final ProxyNetworkListener proxyNetworkListener;
+    private final NetworkListenerAdapter networkListenerAdapter;
     private TransactionWrapper transactionWrapper;
 
-    private CallerImpl(CasualConnection casualConnection, ServiceCaller serviceCaller, QueueCaller queueCaller, ProxyNetworkListener proxyNetworkListener, TransactionManager transactionManager)
+    private CallerImpl(CasualConnection casualConnection, ServiceCaller serviceCaller, QueueCaller queueCaller, NetworkListenerAdapter networkListenerAdapter, TransactionManager transactionManager)
     {
         this.casualConnection = casualConnection;
         this.serviceCaller = serviceCaller;
         this.queueCaller = queueCaller;
-        this.proxyNetworkListener = proxyNetworkListener;
+        this.networkListenerAdapter = networkListenerAdapter;
         this.transactionWrapper = TransactionWrapper.of(transactionManager);
     }
 
@@ -61,7 +61,7 @@ public class CallerImpl implements Caller
         CasualConnection casualConnection = CasualConnection.of(networkConnection);
         CasualXAResource casualXAResource = CasualXAResource.of(casualConnection, resourceManagerId);
         casualConnection.setCasualXAResource(casualXAResource);
-        ProxyNetworkListener proxyNetworkListener = ProxyNetworkListener.of(networkListener);
+        NetworkListenerAdapter proxyNetworkListener = NetworkListenerAdapter.of(networkListener);
         return new CallerImpl(casualConnection, ServiceCallerImpl.of(casualConnection), QueueCallerImpl.of(casualConnection), proxyNetworkListener, transactionManager);
     }
 
@@ -86,7 +86,7 @@ public class CallerImpl implements Caller
                                 .withErrorState(ErrorState.TPENOENT)
                                 .build();
         }
-        return transactionWrapper.execute(() -> queueCaller.enqueue(qinfo, msg), casualConnection.getCasualXAResource());
+        return transactionWrapper.execute(() -> validateReply(queueCaller.enqueue(qinfo, msg)), casualConnection.getCasualXAResource());
     }
 
     @Override
@@ -98,7 +98,7 @@ public class CallerImpl implements Caller
                                 .withErrorState(ErrorState.TPENOENT)
                                 .build();
         }
-        return transactionWrapper.execute(() -> queueCaller.dequeue(qinfo, selector), casualConnection.getCasualXAResource());
+        return transactionWrapper.execute(() -> validateReply(queueCaller.dequeue(qinfo, selector)), casualConnection.getCasualXAResource());
     }
 
     @Override
@@ -132,14 +132,7 @@ public class CallerImpl implements Caller
         return transactionWrapper.execute(() -> validateReply(serviceCaller.tpcall(serviceName, data, flags)), casualConnection.getCasualXAResource());
     }
 
-    private ServiceReturn<CasualBuffer> validateReply(ServiceReturn<CasualBuffer> reply)
-    {
-        if(reply.getServiceReturnState() == ServiceReturnState.TPSUCCESS)
-        {
-            return reply;
-        }
-        throw new ServiceCallFailedException("tpcall failed: " + reply.getErrorState());
-    }
+
 
     private ServiceReturn<CasualBuffer> createTPENOENTReply(String serviceName)
     {
@@ -200,7 +193,7 @@ public class CallerImpl implements Caller
     @Override
     public boolean isDisconnected()
     {
-        return proxyNetworkListener.isDisconnected();
+        return networkListenerAdapter.isDisconnected();
     }
 
     @Override
@@ -270,19 +263,46 @@ public class CallerImpl implements Caller
         }
     }
 
-    private static class ProxyNetworkListener implements NetworkListener
+    private EnqueueReturn validateReply(EnqueueReturn answer)
+    {
+        if(answer.getErrorState() != ErrorState.OK)
+        {
+            throw new QueueOperationFailedException("enqueue failed: " + answer);
+        }
+        return answer;
+    }
+
+    private DequeueReturn validateReply(DequeueReturn answer)
+    {
+        if(answer.getErrorState() != ErrorState.OK)
+        {
+            throw new QueueOperationFailedException("dequeue failed: " + answer);
+        }
+        return answer;
+    }
+
+    private ServiceReturn<CasualBuffer> validateReply(ServiceReturn<CasualBuffer> reply)
+    {
+        if(reply.getServiceReturnState() == ServiceReturnState.TPSUCCESS)
+        {
+            return reply;
+        }
+        throw new ServiceCallFailedException("tpcall failed: " + reply.getErrorState());
+    }
+
+    private static class NetworkListenerAdapter implements NetworkListener
     {
         private final NetworkListener networkListener;
         private boolean disconnected = false;
-        private ProxyNetworkListener(NetworkListener networkListener)
+        private NetworkListenerAdapter(NetworkListener networkListener)
         {
             this.networkListener = networkListener;
         }
 
-        public static ProxyNetworkListener of(NetworkListener networkListener)
+        public static NetworkListenerAdapter of(NetworkListener networkListener)
         {
             Objects.requireNonNull(networkListener, "networkListener can not be null");
-            return new ProxyNetworkListener(networkListener);
+            return new NetworkListenerAdapter(networkListener);
         }
 
         @Override

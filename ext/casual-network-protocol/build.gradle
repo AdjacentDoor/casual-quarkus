@@ -13,6 +13,13 @@ plugins {
 
 defaultTasks 'build'
 
+test{
+    useJUnitPlatform()
+    testLogging {
+	events "passed", "skipped", "failed"
+    }
+}
+
 dependencies {
   compileOnly libs.netty
   compileOnly project(':ext:casual-api')

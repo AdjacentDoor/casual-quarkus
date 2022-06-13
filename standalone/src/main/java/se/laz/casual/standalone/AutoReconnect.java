@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 public class AutoReconnect implements Runnable
 {
-    private static final Logger LOG = Logger.getLogger(AutoReconnect.class.getName());
     private final ReconnectAble reconnectAble;
     private final String host;
     private final StaggeredOptions staggeredOptions;
