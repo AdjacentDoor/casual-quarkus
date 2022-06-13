@@ -1,7 +1,6 @@
 package se.laz.casual.standalone;
 
 import se.laz.casual.network.outbound.NetworkListener;
-import se.laz.casual.standalone.Caller;
 
 import javax.transaction.TransactionManager;
 import java.util.Objects;

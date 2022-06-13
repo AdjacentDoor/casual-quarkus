@@ -3,8 +3,6 @@ plugins {
     id 'io.quarkus'
 }
 
-def casual_standalone_version = 0.1
-
 dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-resteasy-reactive'

@@ -66,7 +66,7 @@ public class CallerPool
                                             .filter(item -> item.isDisconnected())
                                             .collect(Collectors.counting());
             pool.removeIf(item -> item.isDisconnected());
-            for(int i = 0; i < numberOfDisconnected; ++numberOfDisconnected)
+            for(int i = 0; i < numberOfDisconnected; ++i)
             {
                 pool.add(createCaller());
             }

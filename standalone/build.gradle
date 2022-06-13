@@ -2,8 +2,6 @@ plugins{
     id 'java'
 }
 
-def casual_standalone_version = 0.1
-
 dependencies{
     compileOnly 'javax.transaction:transaction-api:1.1'
     compileOnly project(':ext:casual-api')
