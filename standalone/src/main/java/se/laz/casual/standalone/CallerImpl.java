@@ -129,7 +129,16 @@ public class CallerImpl implements Caller
             return serviceCaller.tpcall(serviceName, data, flags);
         }
         LOG.finest(() -> "tpcall " + serviceName);
-        return transactionWrapper.execute(() -> serviceCaller.tpcall(serviceName, data, flags), casualConnection.getCasualXAResource());
+        return transactionWrapper.execute(() -> validateReply(serviceCaller.tpcall(serviceName, data, flags)), casualConnection.getCasualXAResource());
+    }
+
+    private ServiceReturn<CasualBuffer> validateReply(ServiceReturn<CasualBuffer> reply)
+    {
+        if(reply.getServiceReturnState() == ServiceReturnState.TPSUCCESS)
+        {
+            return reply;
+        }
+        throw new ServiceCallFailedException("tpcall failed: " + reply.getErrorState());
     }
 
     private ServiceReturn<CasualBuffer> createTPENOENTReply(String serviceName)

@@ -9,14 +9,14 @@ import java.util.UUID;
 public class CasualConnection
 {
     private final NetworkConnection networkConnection;
-    private final String id;
+    private final UUID id;
     private CasualXAResource casualXAResource;
     private int timeout;
 
     private CasualConnection(NetworkConnection networkConnection)
     {
         this.networkConnection = networkConnection;
-        this.id = networkConnection.getAddress();
+        this.id = networkConnection.getId();
     }
 
     public CasualConnection setCasualXAResource(CasualXAResource casualXAResource)
@@ -57,7 +57,7 @@ public class CasualConnection
         return casualXAResource.getCurrentXid();
     }
 
-    public String getId()
+    public UUID getId()
     {
         return id;
     }

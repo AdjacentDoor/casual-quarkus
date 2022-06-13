@@ -1,4 +1,4 @@
-package se.laz.casual.quarkus;
+package se.laz.casual.standalone;
 
 public class ServiceCallFailedException extends RuntimeException
 {

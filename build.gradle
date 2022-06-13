@@ -1,6 +1,7 @@
 subprojects{
    group 'se.laz.casual'
    version '1.0.0-SNAPSHOT'
+   apply from: "$rootProject.projectDir/versions.gradle"
    repositories {
       mavenCentral()
       mavenLocal()
@@ -18,5 +19,6 @@ subprojects{
       compileTestJava {
          options.encoding = 'UTF-8'
       }
-   }
+    }
+    
 }

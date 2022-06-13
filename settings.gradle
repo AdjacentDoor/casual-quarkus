@@ -9,5 +9,10 @@ pluginManagement {
     }
 }
 rootProject.name='casual-quarkus'
+include 'ext:casual-api'
+include 'ext:casual-network-protocol'
+include 'ext:casual-network-api'
+include 'ext:casual-network'
 include 'standalone'
 include 'quarkus'
+
