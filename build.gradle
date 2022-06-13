@@ -15,8 +15,8 @@ subprojects{
       targetCompatibility = JavaVersion.VERSION_11
       compileJava {
          options.encoding = 'UTF-8'
-         //options.compilerArgs << '-parameters' << "-Xlint:all" << "-Werror"
-	    options.compilerArgs << '-parameters' << "-Xlint:all" 
+         options.compilerArgs << '-parameters' << "-Xlint:all" << "-Werror"
+	      //options.compilerArgs << '-parameters' << "-Xlint:all"
       }
    }
    tasks.withType(Test){
