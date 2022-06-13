@@ -2,10 +2,19 @@ plugins{
     id 'java'
 }
 
+
+
 dependencies{
     compileOnly 'javax.transaction:transaction-api:1.1'
-    compileOnly project(':ext:casual-api')
-    compileOnly project(':ext:casual-network-protocol')
-    compileOnly project(':ext:casual-network-api')
-    compileOnly project(':ext:casual-network')    
+    implementation project(':ext:casual-api')
+    implementation project(':ext:casual-network-protocol')
+    implementation project(':ext:casual-network-api')
+    implementation project(':ext:casual-network')
 }
+
+jar {
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') && it.name.startsWith('casual') }.collect { zipTree(it) }
+    }
+}
+

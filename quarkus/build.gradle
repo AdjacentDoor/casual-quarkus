@@ -17,12 +17,9 @@ dependencies {
 
     // workaround for https://github.com/quarkusio/quarkus/issues/19970
     compileOnly 'org.osgi:osgi.annotation:7.0.0'
-    
+
+    // use the fatty jar
     implementation project(':standalone')
-    implementation project(':ext:casual-api')
-    implementation project(':ext:casual-network-protocol')
-    implementation project(':ext:casual-network-api')
-    implementation project(':ext:casual-network')
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
