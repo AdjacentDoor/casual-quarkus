@@ -28,11 +28,6 @@ public final class CasualResourceManager
         return INSTANCE;
     }
 
-    public final Integer getNextId()
-    {
-        return currentRMId.getAndIncrement();
-    }
-
     public void put(final Xid xid)
     {
         if(pendingRequests.containsKey(xid))
