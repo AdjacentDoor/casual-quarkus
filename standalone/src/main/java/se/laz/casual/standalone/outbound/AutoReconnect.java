@@ -1,4 +1,4 @@
-package se.laz.casual.standalone;
+package se.laz.casual.standalone.outbound;
 
 import se.laz.casual.network.outbound.NetworkListener;
 
@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 public class AutoReconnect implements Runnable
 {

@@ -11,10 +11,10 @@ import se.laz.casual.api.flags.AtmiFlags;
 import se.laz.casual.api.flags.Flag;
 import se.laz.casual.api.flags.ServiceReturnState;
 import se.laz.casual.quarkus.db.Fruit;
-import se.laz.casual.standalone.Caller;
-import se.laz.casual.standalone.CasualManagedConnection;
-import se.laz.casual.standalone.CasualManagedConnectionImpl;
-import se.laz.casual.standalone.ServiceCallFailedException;
+import se.laz.casual.standalone.outbound.Caller;
+import se.laz.casual.standalone.outbound.CasualManagedConnection;
+import se.laz.casual.standalone.outbound.CasualManagedConnectionImpl;
+import se.laz.casual.standalone.outbound.ServiceCallFailedException;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;

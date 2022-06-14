@@ -1,4 +1,4 @@
-package se.laz.casual.standalone;
+package se.laz.casual.standalone.outbound;
 
 import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;

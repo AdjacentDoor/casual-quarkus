@@ -1,4 +1,4 @@
-package se.laz.casual.standalone;
+package se.laz.casual.standalone.outbound;
 
 import se.laz.casual.api.flags.Flag;
 import se.laz.casual.api.flags.XAFlags;
@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class CasualXAResource implements XAResource
@@ -32,8 +31,6 @@ public class CasualXAResource implements XAResource
     private final int resourceManagerId;
     private Xid currentXid = null;
     private boolean readOnly = false;
-    private AtomicInteger startEndCounter = new AtomicInteger(0);
-    private UUID id = UUID.randomUUID();
 
     private CasualXAResource(final CasualConnection connection, int resourceManagerId)
     {
@@ -82,7 +79,7 @@ public class CasualXAResource implements XAResource
     @Override
     public void end(Xid xid, int flag) throws XAException
     {
-        LOG.finest(() -> "end, id: " + id.toString() + " counter: " + startEndCounter.get());
+        LOG.finest(() -> "end, xid: " + PrettyPrinter.casualStringify(xid));
         if ((flag & (TMSUSPEND | TMFAIL)) != 0)
         {
             // can only suspend the associated xid
@@ -215,23 +212,21 @@ public class CasualXAResource implements XAResource
     @Override
     public void start(Xid xid, int i) throws XAException
     {
-        LOG.finest(() -> "start, id: " + id.toString() + " counter: " + startEndCounter.get());
         LOG.finest(()-> String.format("start, xid: %s ( %s ) flag: %d ", PrettyPrinter.casualStringify(xid), xid, i));
         if(null == xid)
         {
-            LOG.warning(()-> String.format("start, id: " + id.toString() + ",  xid is null!"));
+            LOG.warning(()-> String.format("start, xid is null!"));
             throw new XAException(XAException.XAER_PROTO);
         }
         if(currentXid != null)
         {
-            LOG.warning(()-> String.format("start, id: " + id.toString() + ", current xid is not null! xid: %s ( %s ) flag: %d ", PrettyPrinter.casualStringify(currentXid), currentXid, i));
+            LOG.warning(()-> String.format("start, current xid is not null! xid: %s ( %s ) flag: %d ", PrettyPrinter.casualStringify(currentXid), currentXid, i));
             throw new XAException(XAException.XAER_PROTO);
         }
         readOnly = false;
         if(!(XAFlags.TMJOIN.getValue() == i || XAFlags.TMRESUME.getValue() == i) &&
                 CasualResourceManager.getInstance().isPending(xid))
         {
-            LOG.warning(() -> "start, id: " + id.toString() + " throwing XAException.XAER_DUPID");
             LOG.finest(()->"throwing XAException.XAER_DUPID");
             throw new XAException(XAException.XAER_DUPID);
         }
@@ -253,13 +248,11 @@ public class CasualXAResource implements XAResource
     private void associate(Xid xid)
     {
         currentXid = xid;
-        startEndCounter.incrementAndGet();
     }
 
     public void disassociate()
     {
         currentXid = null;
-        startEndCounter.decrementAndGet();
     }
 
     public void setReadOnly()

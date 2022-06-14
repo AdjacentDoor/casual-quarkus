@@ -1,4 +1,4 @@
-package se.laz.casual.standalone;
+package se.laz.casual.standalone.outbound;
 
 import se.laz.casual.api.flags.ErrorState;
 import se.laz.casual.api.network.protocol.messages.CasualNWMessage;
