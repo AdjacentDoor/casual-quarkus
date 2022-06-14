@@ -23,7 +23,7 @@ public final class CasualResourceManager
     private CasualResourceManager()
     {}
 
-    public static final CasualResourceManager getInstance()
+    public static CasualResourceManager getInstance()
     {
         return INSTANCE;
     }
