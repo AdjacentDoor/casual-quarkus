@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class StaggeredOptions
 {
-    private static final Logger LOG = Logger.getLogger(AutoReconnect.class.getName());
+    private static final Logger LOG = Logger.getLogger(StaggeredOptions.class.getName());
     private final Duration initialDelay;
     private Duration subsequentDelay;
     private int staggerFactor;
@@ -23,6 +23,10 @@ public class StaggeredOptions
     {
         Objects.requireNonNull(initialDelay, "initialDelay can not be null");
         Objects.requireNonNull(subsequentDelay, "subsequentDelay can not be null");
+        if(staggerFactor <= 0)
+        {
+            throw new IllegalArgumentException("staggerFactor equal to or below zero is not supported");
+        }
         return new StaggeredOptions(initialDelay, subsequentDelay,staggerFactor);
     }
 
@@ -34,7 +38,7 @@ public class StaggeredOptions
             return initialDelay;
         }
         subsequentDelay = Duration.ofMillis(subsequentDelay.toMillis() * staggerFactor);
-        LOG.info(() -> " delay: " + subsequentDelay);
+        LOG.finest(() -> " delay: " + subsequentDelay);
         return subsequentDelay;
     }
 

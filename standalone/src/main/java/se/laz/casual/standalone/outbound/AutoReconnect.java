@@ -17,8 +17,9 @@ public class AutoReconnect implements Runnable
     private final NetworkListener networkListener;
     private int port;
     private TransactionManager transactionManager;
+    private final CallerProducer callerProducer;
 
-    private AutoReconnect(ReconnectAble reconnectAble, String host, int port, TransactionManager transactionManager, StaggeredOptions staggeredOptions, NetworkListener networkListener)
+    private AutoReconnect(ReconnectAble reconnectAble, String host, int port, TransactionManager transactionManager, StaggeredOptions staggeredOptions, NetworkListener networkListener, CallerProducer callerProducer)
     {
         this.reconnectAble = reconnectAble;
         this.host = host;
@@ -26,17 +27,19 @@ public class AutoReconnect implements Runnable
         this.transactionManager = transactionManager;
         this.staggeredOptions = staggeredOptions;
         this.networkListener = networkListener;
+        this.callerProducer = callerProducer;
         scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.schedule(this, staggeredOptions.getNext().toMillis(), TimeUnit.MILLISECONDS);
     }
 
-    public static AutoReconnect of(ReconnectAble reconnectAble, String host, int port, TransactionManager transactionManager, StaggeredOptions staggeredOptions, NetworkListener networkListener)
+    public static AutoReconnect of(ReconnectAble reconnectAble, String host, int port, TransactionManager transactionManager, StaggeredOptions staggeredOptions, NetworkListener networkListener, CallerProducer callerProducer)
     {
         Objects.requireNonNull(reconnectAble, "reconnectAble can not be null");
         Objects.requireNonNull(host, "host can not be null");
         Objects.requireNonNull(transactionManager, "transactionManager can not be null");
         Objects.requireNonNull(staggeredOptions, "staggeredOptions can not be null");
-        return new AutoReconnect(reconnectAble, host, port, transactionManager, staggeredOptions, networkListener);
+        Objects.requireNonNull(callerProducer, "callerProducer can not be null");
+        return new AutoReconnect(reconnectAble, host, port, transactionManager, staggeredOptions, networkListener, callerProducer);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class AutoReconnect implements Runnable
     {
         try
         {
-            Caller caller = new CallerProducer().createCaller(transactionManager, this.host, this.port, networkListener);
+            Caller caller = callerProducer.createCaller(transactionManager, this.host, this.port, networkListener);
             reconnectAble.setCaller(caller);
         }
         catch(Exception e)

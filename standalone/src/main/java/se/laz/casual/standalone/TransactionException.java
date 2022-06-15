@@ -1,4 +1,4 @@
-package se.laz.casual.standalone.outbound;
+package se.laz.casual.standalone;
 
 public class TransactionException extends RuntimeException
 {

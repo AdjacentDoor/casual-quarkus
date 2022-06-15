@@ -1,8 +1,15 @@
 plugins{
     id 'java'
+    id 'jacoco'
+    id 'groovy'
 }
 
-
+test{
+    useJUnitPlatform()
+    testLogging {
+	events "passed", "skipped", "failed"
+    }
+}
 
 dependencies{
     compileOnly 'javax.transaction:transaction-api:1.1'
@@ -10,6 +17,15 @@ dependencies{
     implementation project(':ext:casual-network-protocol')
     implementation project(':ext:casual-network-api')
     implementation project(':ext:casual-network')
+
+    testImplementation libs.system_lambda
+    
+    // for spock
+    implementation libs.groovy_all
+    testImplementation platform(libs.spock_bom)
+    testImplementation libs.spock_core
+    testImplementation libs.spock_junit4
+    testImplementation libs.cglib_nodep
 }
 
 jar {

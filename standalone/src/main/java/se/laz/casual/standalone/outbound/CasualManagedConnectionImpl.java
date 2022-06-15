@@ -25,7 +25,7 @@ public class CasualManagedConnectionImpl implements CasualManagedConnection, Net
         this.host = host;
         this.port = port;
         this.transactionManager = transactionManager;
-        caller = new CallerProducer().createCaller(transactionManager, this.host, this.port, this);
+        caller = CallerProducerImpl.of().createCaller(transactionManager, this.host, this.port, this);
     }
 
     public static CasualManagedConnection of(TransactionManager transactionManager,
@@ -51,7 +51,8 @@ public class CasualManagedConnectionImpl implements CasualManagedConnection, Net
                     StaggeredOptions.of(Duration.of(500, ChronoUnit.MILLIS),
                             Duration.of(1000, ChronoUnit.MILLIS),
                             2),
-                    this);
+                    this,
+                    CallerProducerImpl.of());
         }
     }
 

@@ -18,6 +18,8 @@ import se.laz.casual.network.outbound.CorrelatorImpl;
 import se.laz.casual.network.outbound.NettyConnectionInformation;
 import se.laz.casual.network.outbound.NettyNetworkConnection;
 import se.laz.casual.network.outbound.NetworkListener;
+import se.laz.casual.standalone.CasualXAResource;
+import se.laz.casual.standalone.TransactionWrapper;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;

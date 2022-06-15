@@ -1,4 +1,4 @@
-package se.laz.casual.standalone.outbound;
+package se.laz.casual.standalone;
 
 import se.laz.casual.api.flags.Flag;
 import se.laz.casual.api.flags.XAFlags;
@@ -13,6 +13,8 @@ import se.laz.casual.network.protocol.messages.transaction.CasualTransactionReso
 import se.laz.casual.network.protocol.messages.transaction.CasualTransactionResourcePrepareRequestMessage;
 import se.laz.casual.network.protocol.messages.transaction.CasualTransactionResourceRollbackReplyMessage;
 import se.laz.casual.network.protocol.messages.transaction.CasualTransactionResourceRollbackRequestMessage;
+import se.laz.casual.standalone.outbound.CasualConnection;
+import se.laz.casual.standalone.outbound.CasualResourceManager;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
