@@ -18,9 +18,16 @@ dependencies {
     // workaround for https://github.com/quarkusio/quarkus/issues/19970
     compileOnly 'org.osgi:osgi.annotation:7.0.0'
 
-    // use the fatty jar
+    // we do not the use fatty jar ourself but others should use the published fatty jar
+    // reason, we are *in* this project so any IDEA will not handle the deps correctly
+    // however, when supplied as an external jar from a repo as usual it will
     implementation project(':standalone')
-
+    // thus these are only for this project, for any project using the published fat jar that dep also brings in these
+    implementation project(':ext:casual-api')
+    implementation project(':ext:casual-network-protocol')
+    implementation project(':ext:casual-network-api')
+    implementation project(':ext:casual-network')
+    
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
 }

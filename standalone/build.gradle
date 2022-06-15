@@ -33,4 +33,3 @@ jar {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') && it.name.startsWith('casual') }.collect { zipTree(it) }
     }
 }
-
